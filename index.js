@@ -27,7 +27,7 @@ const bucketName = process.env.BUCKET_NAME;
 const bucketRegion = process.env.BUCKET_REGION;
 const accessKey = process.env.ACCESS_KEY;
 const secretAccessKey = process.env.SECRET_ACCESS_KEY;
-
+const port = process.env.PORT;
 const s3 = new S3Client({
     credentials: {
         accessKeyId: accessKey,
@@ -588,6 +588,6 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render('error', { err })
 })
 
-app.listen(3000, () => {
-    console.log('Serving on port 3000')
+app.listen(port, () => {
+    console.log('Server active')
 });
