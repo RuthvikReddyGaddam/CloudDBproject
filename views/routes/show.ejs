@@ -1,0 +1,105 @@
+<% layout('layouts/boilerplate')%>
+
+<div class="container col-md-6">
+<div class="card mt-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-2">
+                <img src="<%=data[0].posterUrl%>" width="100vh" height="100vh" alt="user photo" class="rounded">
+            </div>
+            <div class="col-md-10">
+                <div><h2><%=data[0].firstName%> <%=data[0].lastName%></h2></div>
+                <div><h5><%=data[0].email%></h5></div>
+            </div>
+        </div>
+
+    </div>
+    <div class="card-title container">
+        <h3><%=data[0].title%></h3>
+    </div>
+    <div class="card-body">
+        <div><h5><%=data[0].postData%></h5></div>
+        <%if(data[0].photoUrl !== "no image"){%>
+            <div class="text-center mt-4"><img src="<%=data[0].imageUrl%>" class="img-fluid" width="500vh" height="500vh"></div>    
+            <%}%>
+    <%if(data[0].userID === user){%>
+        <div class="mb-3 mt-4">
+          <a
+            href="<%=data[0].postID%>/edit"
+            class="btn btn-sm btn-outline-secondary d-inline-block"
+            >Edit Post</a
+          >
+      
+          <form
+            action="<%=data[0].postID%>?_method=DELETE"
+            method="post"
+            class="d-inline-block"
+          >
+            <button type="submit" class="btn btn-danger btn-sm">Delete Post</button>
+          </form>
+        </div>
+        <%}%>    
+</div>
+</div>
+    
+    
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h3 class="h3">Post a Reply</h3>
+    </div>
+    <div class="card-body">
+        <div class="mb-2">
+            <form action="/replies/<%=data[0].postID%>" method="post">
+              <textarea
+                name="replyData"
+                id="replyData"
+                class="container"
+                placeholder="Your Reply"
+              ></textarea>
+              <br />
+              <button type="submit" class="btn btn-success">Post Reply</button>
+            </form>
+          </div>
+        
+    </div>
+</div>
+
+ 
+  <div class="mb-2">
+   
+
+    <% for(let i = 0; i<reply.length; i++){%>
+      <div class="mt-4">  
+        <div class="card">
+            <div class="card-header">
+              <div class="row">
+                <div class="col-md-2">
+                    <img src="<%=reply[i].userUrl%>" alt="user photo" width="70vh" height="70vh">
+                </div>
+                <div class="col-md-10">
+                    <div><h5><%=reply[i].firstName%> <%=reply[i].lastName%></h5></div>
+                    <div><p><%=reply[i].email%></p></div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <p class="card-text"><%=reply[i].replyData%> </p>
+
+              <%if(reply[i].userID === user){%>
+                <form
+                  action="/replies/<%=data[0].postID%>/<%=reply[i].replyID%>?_method=DELETE"
+                  method="post"
+                >
+                  <button class="btn btn-danger">Delete Reply</button>
+                </form>
+              
+                <%}%> 
+            </div>
+          </div>
+       
+<%}%>
+      </div>
+    </reply.length;>
+  </div>
+</div>

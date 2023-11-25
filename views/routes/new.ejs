@@ -1,0 +1,33 @@
+<% layout('layouts/boilerplate')%>
+<div class="container col-md-6">
+  <div class="card my-3">
+  <h1 class="text-center mt-3">Post a Request</h1>
+    <div class="card-body">
+      <p class="card-text">
+
+    <form action="/requests" method="post" enctype="multipart/form-data">
+      <div>
+        <label for="title">Title</label>
+        <input type="text" name="title" id="title" class="form-control"/>
+        <br />
+        <label for="postData">Type your post here</label>
+        <br />
+        <textarea name="postData" id="postData" cols="70" rows="7" class="form-control"></textarea>
+      </div>
+      <br />
+      <div>
+        <label for="photoUrl">upload an image</label>
+        <input type="file" accept="image" name="photoUrl" id="photoUrl" class="form-control"/>
+      </div>
+  <br>
+      <button type="submit" class="btn btn-success form-control">Submit your request</button>
+    </form>
+
+  </div>
+  </p>
+</div>
+
+</div>
+
+
+

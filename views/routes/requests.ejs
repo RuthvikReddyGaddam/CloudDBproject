@@ -1,0 +1,50 @@
+<% layout('layouts/boilerplate')%>
+
+
+
+<main role="main">
+
+  <section class="jumbotron text-center">
+    <div class="container">
+      <h1 class="jumbotron-heading">ShareLife</h1>
+      <p class="lead text-muted">Welcome to ShareLife! Post your needs, respond to other requests and search for donors. Happy donating!!</p>
+<%if(user){%>
+  <p>
+    <a href="/requests/new" class="btn btn-primary my-2">Post a Request</a>
+    <a href="/donor" class="btn btn-secondary my-2">Register as Donor</a>
+  </p>
+  <%}%>
+    </div>
+  </section>
+
+  <div class="album py-5 bg-light">
+    <div class="container">
+      <div class="row">
+        
+        <%for(let i = 0; i<data.length; i++){%>
+          
+          <div class="col-md-4">
+            <div class="card mb-4 box-shadow">
+              <img class="card-img-top" src= "<%=data[i].imageUrl%>" alt="Card image cap">
+              <div class="card-body">
+                <p class="card-text"><%=data[i].postData%></p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    
+                  <a href="requests/<%=data[i].postID%>" class="btn btn-sm btn-outline-secondary">View</a>
+                  <%if(data[i].userID === user){%>
+                  <a href="requests/<%=data[i].postID%>/edit" class="btn btn-sm btn-outline-secondary">Edit</a>
+                  <%}%>
+                </div>
+                
+                  <!-- <small class="text-muted">9 mins</small> -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <%}%>
+      </div>
+    </div>
+  </div>
+
+</main>

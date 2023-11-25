@@ -1,0 +1,40 @@
+<% layout('layouts/boilerplate')%>
+
+<div class="container col-md-6">
+  <div class="card my-3">
+  <h1 class="text-center mt-3">Edit your post</h1>
+    <div class="card-body">
+      <p class="card-text">
+
+        <form action="/requests/<%=data[0].postID%>?_method=PUT" method="post">
+          <div>
+            <label class="mt-3" for="post">Title</label>
+            <br />
+            <input name="title" type="text" class="form-control" value="<%=data[0].title%>">
+          </div>
+      
+          <div>
+            <label class="mt-3" for="postData">Edit your post</label>
+            <br />
+            <textarea class="form-control"  name="postData" id="postData" cols="70" rows="7"><%=data[0].postData%></textarea>
+          </div>
+      
+          <div>
+            <p>Current Post Image</p>
+            <img src="<%=data[0].imageUrl%>" alt="" class="img-fluid img-thumbnail rounded" width="200vh" height="200vh">
+          </div>
+          <div>
+            <label for="photoUrl" class="mt-3">Change uploaded image</label>
+            <input class="form-control" type="file" name="photoUrl" id="photoUrl" />
+          </div>
+          
+          <button type="submit" class="btn btn-success container mt-3">Submit</button>
+        </form>
+
+  </div>
+  </p>
+</div>
+
+</div>
+
+
