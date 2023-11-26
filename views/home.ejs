@@ -1,11 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>ShareLife</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" href="./style.css">
 </head>
-<body>
-    home
+
+<body class="d-flex h-100 text-center">  
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+        <nav class="navbar navbar-dark rounded" style="background-color: #534d4ddc;">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/home"> ShareLife </a>
+              <a class="navbar-brand" href="/login">Login</a>
+            </div>
+          </nav>
+         <main class="px-6">
+            <h1 class="mt-5 pt-5 text-light">ShareLife</h1>
+            <p class="lead mt-5 pt-5 text-light"> Welcome to ShareLife! <br> Post your needs, respond to other requests and search for donors. Happy donating!! <br>
+                Feel free to share the site</p>
+            <a href="/requests" class="text-dark btn btn-lg btn-secondary font-weight-bold border-light bg-light">View
+                All Posts</a>
+        </main>
+
+        <footer class="footer bg-dark py-3 mt-auto fixed-bottom" style="background-color: #534d4ddc;">
+            <div class="container">
+                <span class="text-muted">&copy; ShareLife</span>
+            </div>
+        </footer>
+    </div>
 </body>
+
 </html>
+
+<style>
+    body{
+    height: 100vh;
+    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+    url("https://img.freepik.com/free-photo/vivid-blurred-colorful-wallpaper-background_58702-3459.jpg");
+    background-size: cover;
+    background-position: center; 
+}
+</style>

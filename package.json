@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-lambda": "^3.454.0",
     "@aws-sdk/client-s3": "^3.456.0",
     "@aws-sdk/client-secrets-manager": "^3.454.0",
     "@aws-sdk/lib-storage": "^3.456.0",

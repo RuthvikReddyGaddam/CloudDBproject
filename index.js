@@ -20,7 +20,7 @@ const { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = re
 const crypto = require('crypto');
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const sharp = require('sharp');
-
+const sendEmail = require("./sendEMail");
 const dotenv = require('dotenv');
 dotenv.config();
 const bucketName = process.env.BUCKET_NAME;
@@ -190,6 +190,7 @@ app.post("/register", upload.single('profileUrl'), catchAsync(async (req, res) =
             sql = "INSERT INTO users (firstName, lastName, email, password, address, city, pincode, profileUrl, state) VALUES (?)"
             values = [validator.escape(firstName), validator.escape(lastName), validator.escape(email), hashedPassword, validator.escape(address), validator.escape(city), validator.escape(pincode), imageName, validator.escape(state)]
             await dbQuery(sql, values);
+            sendEmail();
             req.flash("success", "You have Registered. Please Log in to continue");
             res.redirect("/login");
         }
