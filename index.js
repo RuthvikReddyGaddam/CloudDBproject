@@ -23,11 +23,13 @@ const sharp = require('sharp');
 const sendEmail = require("./sendEMail");
 const dotenv = require('dotenv');
 dotenv.config();
+
 const bucketName = process.env.BUCKET_NAME;
 const bucketRegion = process.env.BUCKET_REGION;
 const accessKey = process.env.ACCESS_KEY;
 const secretAccessKey = process.env.SECRET_ACCESS_KEY;
 const port = process.env.PORT;
+
 const s3 = new S3Client({
     credentials: {
         accessKeyId: accessKey,
@@ -98,13 +100,11 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/login', catchAsync(async (req, res, next) => {
-    try {
         if (req.session.isAuthenticated) {
             req.flash('success', "You are already signed in");
             res.redirect("/requests");
         }
         else {
-
             let { email, password } = req.body;
             let values = [validator.escape(email)];
             if (validator.isEmail(values[0])) {
@@ -136,11 +136,7 @@ app.post('/login', catchAsync(async (req, res, next) => {
             }
 
         }
-    } catch (err) {
-        req.flash("error", "Error occured. Try again");
-        res.redirect("/login");
-    }
-}));
+    }));
 
 /////////////////////////REGISTER////////////////////////////////////////////
 app.get('/register', (req, res) => {
@@ -159,12 +155,12 @@ app.post("/register", upload.single('profileUrl'), catchAsync(async (req, res) =
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     let values = [validator.escape(firstName), validator.escape(lastName), validator.escape(email), hashedPassword, validator.escape(address), validator.escape(city), validator.escape(pincode), validator.escape(state)]
     if ((validator.isEmail(values[2])) &&
-        (typeof values[0] == 'string') &&
-        (typeof values[1] == 'string') &&
-        (typeof values[4] == 'string') &&
-        (typeof values[5] == 'string') &&
-        (typeof values[6] == 'string') &&
-        (typeof values[7] == 'string')) {
+        (values[0] && typeof values[0] == 'string') &&
+        (values[1] && typeof values[1] == 'string') &&
+        (values[4] && typeof values[4] == 'string') &&
+        (values[5] && typeof values[5] == 'string') &&
+        (Number.isInteger(parseInt(values[6]))) &&
+        (values[7] && typeof values[7] == 'string')) {
         let sql = "SELECT * FROM users WHERE email = ?"
         let rows = await dbQuery(sql, [values[2]]);
         if (rows.length != 0) {
@@ -298,7 +294,7 @@ app.post('/requests', isLoggedIn, upload.single("photoUrl"), catchAsync(async (r
     const { title, postData } = req.body;
     let values = [validator.escape(title), validator.escape(postData)];
 
-    if (typeof values[0] == "string" && typeof values[1] == "string") {
+    if (values[0].length !== 0 && typeof values[0] == "string" && values[1].length !== 0 &&  typeof values[1] == "string") {
         let imageName = "no image";
         if(req.file && isFileImage(req.file.mimetype)){
             const buffer = await sharp(req.file.buffer).resize({ height: 1200, width: 1200, fit: 'contain' }).png().toBuffer();
@@ -386,7 +382,6 @@ app.get('/requests/:id/edit', isLoggedIn, catchAsync(async (req, res) => {
         const command = new GetObjectCommand(getObjectParams);
         const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
         data[0].imageUrl = url;
-        console.log(data[0])
         res.render("routes/edit", { data });
     }
 }));
@@ -399,7 +394,7 @@ app.put('/requests/:id', isLoggedIn, upload.single("photoUrl"), catchAsync(async
     const title = validator.escape(req.body.title);
     const postData = validator.escape(req.body.postData);
 
-    if (req.session.user !== data[0].userID && !(typeof title == "string" && typeof postData == "string")) {
+    if (req.session.user !== data[0].userID || !(title.length !== 0 && typeof title == "string" && postData.length !== 0 && typeof postData == "string")) {
         res.redirect(`/requests/${req.params.id}`)
     }
     else {
@@ -454,7 +449,7 @@ app.delete('/requests/:id', isLoggedIn, catchAsync(async (req, res) => {
 /////////////////////////REPLIES////////////////////////////////////////////
 app.post('/replies/:id', isLoggedIn, catchAsync(async (req, res) => {
     const values = [req.params.id, validator.escape(req.body.replyData), req.session.user];
-    if (typeof values[1] == "string") {
+    if (values[1].length !== 0 && typeof values[1] == "string") {
         const sql = "INSERT INTO replies (postID, replyData, userID) VALUES (?)";
         await dbQuery(sql, values)
         res.redirect(`/requests/${req.params.id}`);
@@ -496,7 +491,7 @@ app.post('/donor/register', isLoggedIn, catchAsync(async (req, res) => {
     const rows = await dbQuery(sql, values);
     const data = JSON.parse(JSON.stringify(rows));
 
-    if (data.length == 0) {
+    if (data.length === 0) {
         const gender = validator.escape(req.body.gender);
         const weight = validator.escape(req.body.weight);
         const height = validator.escape(req.body.height);
@@ -505,14 +500,13 @@ app.post('/donor/register', isLoggedIn, catchAsync(async (req, res) => {
         const smoking = validator.escape(req.body.smoking);
         const Drinking = validator.escape(req.body.Drinking);
 
-        if ((typeof gender == "string") &&
-            (typeof gender == "string") &&
-            (typeof weight == "string") &&
-            (typeof height == "string") &&
-            (typeof bloodGroup == "string") &&
-            (typeof previousHealthIssues == "string") &&
-            (typeof smoking == "string") &&
-            (typeof Drinking == "string")) {
+        if ((gender.length !== 0 && typeof gender == "string") &&
+            (Number.isInteger(parseInt(weight))) &&
+            (Number.isInteger(parseInt(height))) &&
+            (bloodGroup.length !== 0 && typeof bloodGroup == "string") &&
+            (previousHealthIssues.length !== 0 && typeof previousHealthIssues == "string") &&
+            (smoking.length !== 0 && typeof smoking == "string") &&
+            (Drinking.length !== 0 && typeof Drinking == "string")) {
             const today = new Date();
             const birthDate = new Date(req.body.DoB);
             const age = today.getFullYear() - birthDate.getFullYear();
@@ -549,7 +543,7 @@ app.get('/donors/search', isLoggedIn, (req, res) => {
 
 app.post('/donors/search', isLoggedIn, catchAsync(async (req, res) => {
     const values = [validator.escape(req.body.bloodGroup), validator.escape(req.body.city), validator.escape(req.body.state)];
-    if ((typeof values[0] == "string") && (typeof values[1] == "string") && (typeof values[2] == "string")) {
+    if ((values[0].length !== 0 && typeof values[0] == "string") && (values[1].length !== 0 && typeof values[1] == "string") && (values[2].length !== 0 && typeof values[2] == "string")) {
         const sql = `SELECT * FROM donors JOIN users ON donors.userID = users.userID WHERE donors.bloodGroup = "${values[0]}" AND (users.city = "${values[1]}" OR users.state = "${values[2]}");`
         const rows = await dbQuery(sql);
         const data = JSON.parse(JSON.stringify(rows));
@@ -561,7 +555,6 @@ app.post('/donors/search', isLoggedIn, catchAsync(async (req, res) => {
             command = new GetObjectCommand(getObjectParams);
             url = await getSignedUrl(s3, command, { expiresIn: 3600 });
             data[i].userUrl = url;
-            console.log(data[0]);
         }
         res.render('donor/search', { data });
     }
