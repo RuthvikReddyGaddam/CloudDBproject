@@ -155,12 +155,12 @@ app.post("/register", upload.single('profileUrl'), catchAsync(async (req, res) =
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     let values = [validator.escape(firstName), validator.escape(lastName), validator.escape(email), hashedPassword, validator.escape(address), validator.escape(city), validator.escape(pincode), validator.escape(state)]
     if ((validator.isEmail(values[2])) &&
-        (values[0] && typeof values[0] == 'string') &&
-        (values[1] && typeof values[1] == 'string') &&
-        (values[4] && typeof values[4] == 'string') &&
-        (values[5] && typeof values[5] == 'string') &&
+        (values[0].length !==0 && typeof values[0] == 'string') &&
+        (values[1].length !==0 && typeof values[1] == 'string') &&
+        (values[4].length !==0 && typeof values[4] == 'string') &&
+        (values[5].length !==0 && typeof values[5] == 'string') &&
         (Number.isInteger(parseInt(values[6]))) &&
-        (values[7] && typeof values[7] == 'string')) {
+        (values[7].length !==0 && typeof values[7] == 'string')) {
         let sql = "SELECT * FROM users WHERE email = ?"
         let rows = await dbQuery(sql, [values[2]]);
         if (rows.length != 0) {
